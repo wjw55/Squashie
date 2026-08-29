@@ -18,7 +18,10 @@ export const emptyDiscoveryFilters: DiscoveryFilters = {
   trainingOnly: false,
 };
 
-export function filterCommunities(records: Community[], filters: DiscoveryFilters) {
+export function filterCommunities(
+  records: Community[],
+  filters: DiscoveryFilters,
+) {
   const normalized = filters.query.trim().toLowerCase();
   return records.filter((community) => {
     const searchable = [
@@ -37,13 +40,17 @@ export function filterCommunities(records: Community[], filters: DiscoveryFilter
       (!filters.region || community.region === filters.region) &&
       (!filters.category || community.category === filters.category) &&
       (!filters.access || community.accessType === filters.access) &&
-      (!filters.level || community.levels.includes(filters.level as PlayerLevel)) &&
+      (!filters.level ||
+        community.levels.includes(filters.level as PlayerLevel)) &&
       (!filters.trainingOnly || community.trainingAvailable)
     );
   });
 }
 
-export function parseDiscoveryParams(params: URLSearchParams, validSlugs: Set<string>) {
+export function parseDiscoveryParams(
+  params: URLSearchParams,
+  validSlugs: Set<string>,
+) {
   return {
     filters: {
       query: params.get('q') ?? '',
@@ -60,7 +67,10 @@ export function parseDiscoveryParams(params: URLSearchParams, validSlugs: Set<st
   };
 }
 
-export function serializeDiscoveryParams(filters: DiscoveryFilters, compared: string[]) {
+export function serializeDiscoveryParams(
+  filters: DiscoveryFilters,
+  compared: string[],
+) {
   const params = new URLSearchParams();
   if (filters.query.trim()) params.set('q', filters.query.trim());
   if (filters.region) params.set('region', filters.region);

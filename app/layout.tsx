@@ -13,7 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+  ),
   title: {
     default: 'Squashie — Find your squash community in Singapore',
     template: '%s | Squashie',
@@ -22,15 +24,24 @@ export const metadata: Metadata = {
     'Compare squash clubs and communities in Singapore by access, cost, training, level, and location.',
   openGraph: {
     title: 'Squashie — Find your squash community in Singapore',
-    description: 'Compare access, costs, playing levels, training, and joining steps across Singapore squash communities.',
+    description:
+      'Compare access, costs, playing levels, training, and joining steps across Singapore squash communities.',
     type: 'website',
     locale: 'en_SG',
-    images: [{ url: '/og.png', width: 1734, height: 908, alt: 'Squashie — Find your squash community in Singapore' }],
+    images: [
+      {
+        url: '/og.png',
+        width: 1734,
+        height: 908,
+        alt: 'Squashie — Find your squash community in Singapore',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Squashie — Find your squash community in Singapore',
-    description: 'Compare access, costs, playing levels, training, and joining steps across Singapore squash communities.',
+    description:
+      'Compare access, costs, playing levels, training, and joining steps across Singapore squash communities.',
     images: ['/og.png'],
   },
 };

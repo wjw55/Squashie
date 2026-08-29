@@ -1,8 +1,25 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant data-open {
+  &:where([data-state='open']),
+  &:where([data-open]:not([data-open='false'])) {
+    @slot;
+  }
+}
+@custom-variant data-closed {
+  &:where([data-state='closed']),
+  &:where([data-closed]:not([data-closed='false'])) {
+    @slot;
+  }
+}
+@custom-variant data-checked {
+  &:where([data-state='checked']),
+  &:where([data-checked]:not([data-checked='false'])) {
+    @slot;
+  }
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -59,7 +76,7 @@ body {
   --card-foreground: oklch(0.26 0.04 158);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.26 0.04 158);
-  --primary: oklch(0.40 0.095 158);
+  --primary: oklch(0.4 0.095 158);
   --primary-foreground: oklch(0.985 0.008 100);
   --secondary: oklch(0.94 0.025 148);
   --secondary-foreground: oklch(0.33 0.072 158);
@@ -88,14 +105,14 @@ body {
 }
 
 .dark {
-  --background: oklch(0.20 0.025 158);
+  --background: oklch(0.2 0.025 158);
   --foreground: oklch(0.96 0.012 112);
   --card: oklch(0.24 0.03 158);
   --card-foreground: oklch(0.96 0.012 112);
   --popover: oklch(0.24 0.03 158);
   --popover-foreground: oklch(0.96 0.012 112);
-  --primary: oklch(0.76 0.10 151);
-  --primary-foreground: oklch(0.20 0.03 158);
+  --primary: oklch(0.76 0.1 151);
+  --primary-foreground: oklch(0.2 0.03 158);
   --secondary: oklch(0.31 0.04 158);
   --secondary-foreground: oklch(0.94 0.02 140);
   --muted: oklch(0.29 0.028 158);
