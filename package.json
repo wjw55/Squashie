@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "vinext dev",
     "build": "vinext build",
-    "build:vercel": "vite build --mode vercel",
+    "build:vercel": "vite build --mode vercel && node scripts/verify-vercel-runtime.mjs",
     "start": "wrangler dev --config dist/server/wrangler.json",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "lint": "oxlint",
@@ -47,6 +47,7 @@
     "wrangler": "4.127.1"
   },
   "overrides": {
+    "rolldown": "1.2.1",
     "undici": "7.29.0"
   },
   "type": "module"
