@@ -12,7 +12,6 @@ import {
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { Badge } from '@/components/ui/badge';
-import { correctionEmail } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: 'How Squashie listings work',
@@ -137,18 +136,12 @@ export default function MethodologyPage() {
             Organizers can verify a listing or provide a source-backed
             correction. We review changes manually before publishing them.
           </p>
-          {correctionEmail ? (
-            <a
-              href={`mailto:${correctionEmail}?subject=${encodeURIComponent('Squashie listing correction or verification')}`}
-              className="mt-5 inline-flex rounded-xl bg-[#f2bc5b] px-4 py-2 text-sm font-semibold text-[#51300b] hover:bg-[#ffd17e]"
-            >
-              Email a correction
-            </a>
-          ) : (
-            <p className="mt-5 inline-flex rounded-xl border border-white/25 px-3 py-2 text-xs text-white/70">
-              The correction email will be enabled before the public launch.
-            </p>
-          )}
+          <Link
+            href="/corrections"
+            className="mt-5 inline-flex rounded-xl bg-[#f2bc5b] px-4 py-2 text-sm font-semibold text-[#51300b] hover:bg-[#ffd17e]"
+          >
+            Suggest a correction
+          </Link>
         </section>
       </div>
       <SiteFooter />

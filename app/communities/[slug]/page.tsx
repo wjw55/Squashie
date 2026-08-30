@@ -21,21 +21,23 @@ import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
-import { communities, getCommunity } from '@/lib/communities';
-import { correctionHref } from '@/lib/config';
+import { loadCommunity } from '@/lib/server/community-loaders';
 import { cn } from '@/lib/utils';
 
 type PageProps = { params: Promise<{ slug: string }> };
-
-export function generateStaticParams() {
-  return communities.map((community) => ({ slug: community.slug }));
-}
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const community = getCommunity(slug);
+  if (process.env.SQUASHIE_TEST_DATABASE === '1') {
+    return {
+      title: 'Community listing',
+      description:
+        'Source-backed access, cost, training, and joining information for a Singapore squash community.',
+    };
+  }
+  const community = await loadCommunity(slug);
   if (!community) return { title: 'Community not found' };
   const description = `${community.suitableFor} Access: ${community.accessSummary}. Indicative cost: ${community.indicativeCost}.`;
   return {
@@ -57,10 +59,9 @@ export async function generateMetadata({
 
 export default async function CommunityPage({ params }: PageProps) {
   const { slug } = await params;
-  const community = getCommunity(slug);
+  const community = await loadCommunity(slug);
   if (!community) notFound();
   const directions = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(community.address)}`;
-  const correction = correctionHref(community.name);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -307,18 +308,12 @@ export default async function CommunityPage({ params }: PageProps) {
             </ul>
           </div>
           <div className="md:text-right">
-            {correction ? (
-              <a
-                href={correction}
-                className={buttonVariants({ variant: 'outline' })}
-              >
-                Suggest a correction or verify
-              </a>
-            ) : (
-              <span className="inline-flex rounded-xl border border-dashed border-border px-3 py-2 text-xs text-muted-foreground">
-                Correction email activates before public launch
-              </span>
-            )}
+            <Link
+              href={`/corrections?community=${community.slug}`}
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              Suggest a correction or verify
+            </Link>
           </div>
         </section>
       </div>

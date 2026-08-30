@@ -1,74 +1,4 @@
-export type Region =
-  | 'Central'
-  | 'East'
-  | 'West'
-  | 'North'
-  | 'North-East'
-  | 'Islandwide';
-export type CommunityCategory =
-  | 'Public programme'
-  | 'Competitive community'
-  | 'Alumni community'
-  | 'Private club'
-  | 'Social group'
-  | 'Coaching academy';
-export type AccessType =
-  | 'Public'
-  | 'Eligibility-based'
-  | 'Members'
-  | 'Guests welcome';
-export type PlayerLevel =
-  | 'Beginner'
-  | 'Intermediate'
-  | 'Advanced'
-  | 'Competitive';
-export type VerificationStatus =
-  | 'Unverified'
-  | 'Organizer verified'
-  | 'Needs re-checking';
-
-export interface CommunityContact {
-  label: string;
-  href: string;
-  kind: 'website' | 'email' | 'phone' | 'form' | 'community';
-}
-
-export interface CommunitySource {
-  label: string;
-  url: string;
-}
-
-export interface Community {
-  slug: string;
-  name: string;
-  shortName: string;
-  category: CommunityCategory;
-  region: Region;
-  neighbourhood: string;
-  address: string;
-  suitableFor: string;
-  description: string;
-  accessType: AccessType;
-  eligibility: string;
-  accessSummary: string;
-  levels: PlayerLevel[];
-  courtCount: string;
-  socialPlay: string;
-  trainingAvailable: boolean;
-  trainingIntensity: 'Social' | 'Moderate' | 'Structured' | 'Competitive';
-  trainingSummary: string;
-  joiningFee: string;
-  recurringFee: string;
-  courtFee: string;
-  guestFee: string;
-  indicativeCost: string;
-  joiningSteps: string[];
-  contacts: CommunityContact[];
-  sources: CommunitySource[];
-  lastChecked: string;
-  verificationStatus: VerificationStatus;
-  note?: string;
-}
+import type { Community, VerificationStatus } from '@/lib/domain/community';
 
 const notListed = 'Not publicly listed—contact organizer';
 
@@ -827,10 +757,4 @@ function assertEditorialData(records: Community[]) {
 }
 
 assertEditorialData(communities);
-
-export function getCommunity(slug: string) {
-  return communities.find((community) => community.slug === slug);
-}
-
-export const communityCount = communities.length;
 export { notListed };

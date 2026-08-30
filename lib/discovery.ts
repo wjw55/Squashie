@@ -1,4 +1,4 @@
-import type { Community, PlayerLevel } from '@/lib/communities';
+import type { Community, PlayerLevel } from '@/lib/domain/community';
 
 export interface DiscoveryFilters {
   query: string;
@@ -9,6 +9,17 @@ export interface DiscoveryFilters {
   trainingOnly: boolean;
 }
 
+export interface DiscoveryState {
+  filters: DiscoveryFilters;
+  compared: string[];
+}
+
+export type QuickFilter = 'campus' | 'public' | 'training' | 'beginner';
+
+export type ComparisonChange =
+  | { status: 'added' | 'removed'; compared: string[] }
+  | { status: 'limit'; compared: string[] };
+
 export const emptyDiscoveryFilters: DiscoveryFilters = {
   query: '',
   region: '',
@@ -17,6 +28,36 @@ export const emptyDiscoveryFilters: DiscoveryFilters = {
   level: '',
   trainingOnly: false,
 };
+
+export function filtersForQuickFilter(kind: QuickFilter): DiscoveryFilters {
+  if (kind === 'campus') {
+    return { ...emptyDiscoveryFilters, category: 'Alumni community' };
+  }
+  if (kind === 'public') {
+    return { ...emptyDiscoveryFilters, access: 'Public' };
+  }
+  if (kind === 'training') {
+    return { ...emptyDiscoveryFilters, trainingOnly: true };
+  }
+  return { ...emptyDiscoveryFilters, level: 'Beginner' };
+}
+
+export function toggleComparedCommunity(
+  compared: string[],
+  slug: string,
+  limit = 3,
+): ComparisonChange {
+  if (compared.includes(slug)) {
+    return {
+      status: 'removed',
+      compared: compared.filter((value) => value !== slug),
+    };
+  }
+  if (compared.length >= limit) {
+    return { status: 'limit', compared };
+  }
+  return { status: 'added', compared: [...compared, slug] };
+}
 
 export function filterCommunities(
   records: Community[],
@@ -50,7 +91,13 @@ export function filterCommunities(
 export function parseDiscoveryParams(
   params: URLSearchParams,
   validSlugs: Set<string>,
-) {
+): DiscoveryState {
+  const compared = (params.get('compare') ?? '')
+    .split(',')
+    .filter((slug) => validSlugs.has(slug))
+    .filter((slug, index, slugs) => slugs.indexOf(slug) === index)
+    .slice(0, 3);
+
   return {
     filters: {
       query: params.get('q') ?? '',
@@ -60,10 +107,7 @@ export function parseDiscoveryParams(
       level: params.get('level') ?? '',
       trainingOnly: params.get('training') === 'true',
     },
-    compared: (params.get('compare') ?? '')
-      .split(',')
-      .filter((slug) => validSlugs.has(slug))
-      .slice(0, 3),
+    compared,
   };
 }
 

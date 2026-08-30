@@ -12,9 +12,33 @@ const { d1, r2 } = hostingConfig;
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === 'seatbelt';
 
+const localVars: Record<string, string> =
+  process.env.SQUASHIE_TEST_DATABASE === '1'
+    ? {
+        DATABASE_URL:
+          'postgresql://postgres:postgres@127.0.0.1:5432/postgres',
+        DATABASE_POOL_MAX: '1',
+        SQUASHIE_TEST_DATABASE: '1',
+        SQUASHIE_TEST_ADMIN: '1',
+        CORRECTION_RATE_LIMIT_SALT:
+          'isolated-browser-test-rate-limit-salt',
+        BETTER_AUTH_SECRET:
+          'isolated-browser-test-auth-secret-32-characters',
+        BETTER_AUTH_URL: 'http://localhost:3000',
+        GITHUB_CLIENT_ID: 'isolated-test-client-id',
+        GITHUB_CLIENT_SECRET: 'isolated-test-client-secret',
+        ADMIN_EMAILS: 'admin@example.com',
+      }
+    : {};
+
 const localBindingConfig = {
   main: 'vinext/server/fetch-handler',
-  compatibility_flags: ['nodejs_compat'],
+  compatibility_date: '2026-08-30',
+  compatibility_flags: [
+    'nodejs_compat',
+    'nodejs_compat_populate_process_env',
+  ],
+  vars: localVars,
   d1_databases: d1
     ? [
         {
@@ -34,6 +58,16 @@ const localBindingConfig = {
     : [],
 };
 
+const authOptimizeDeps = {
+  exclude: [
+    'better-auth',
+    'better-auth/react',
+    '@better-auth/core',
+    '@better-auth/core/context',
+    '@better-auth/drizzle-adapter',
+  ],
+};
+
 export default defineConfig(async ({ mode }) => {
   const isVercelBuild =
     mode === 'vercel' ||
@@ -46,6 +80,7 @@ export default defineConfig(async ({ mode }) => {
     const { default: tailwindcssVite } = await import('@tailwindcss/vite');
 
     return {
+      optimizeDeps: authOptimizeDeps,
       plugins: [vinext(), tailwindcssVite(), nitro()],
     };
   }
@@ -60,6 +95,7 @@ export default defineConfig(async ({ mode }) => {
   const { cloudflare } = await import('@cloudflare/vite-plugin');
 
   return {
+    optimizeDeps: authOptimizeDeps,
     css: { postcss: { plugins: [tailwindcss()] } },
     server: isCodexSeatbeltSandbox
       ? { watch: { useFsEvents: false, usePolling: true } }
