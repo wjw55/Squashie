@@ -19,6 +19,15 @@ const localVars: Record<string, string> =
           'postgresql://postgres:postgres@127.0.0.1:5432/postgres',
         DATABASE_POOL_MAX: '1',
         SQUASHIE_TEST_DATABASE: '1',
+        SQUASHIE_TEST_ADMIN: '1',
+        CORRECTION_RATE_LIMIT_SALT:
+          'isolated-browser-test-rate-limit-salt',
+        BETTER_AUTH_SECRET:
+          'isolated-browser-test-auth-secret-32-characters',
+        BETTER_AUTH_URL: 'http://localhost:3000',
+        GITHUB_CLIENT_ID: 'isolated-test-client-id',
+        GITHUB_CLIENT_SECRET: 'isolated-test-client-secret',
+        ADMIN_EMAILS: 'admin@example.com',
       }
     : {};
 
@@ -49,6 +58,16 @@ const localBindingConfig = {
     : [],
 };
 
+const authOptimizeDeps = {
+  exclude: [
+    'better-auth',
+    'better-auth/react',
+    '@better-auth/core',
+    '@better-auth/core/context',
+    '@better-auth/drizzle-adapter',
+  ],
+};
+
 export default defineConfig(async ({ mode }) => {
   const isVercelBuild =
     mode === 'vercel' ||
@@ -61,6 +80,7 @@ export default defineConfig(async ({ mode }) => {
     const { default: tailwindcssVite } = await import('@tailwindcss/vite');
 
     return {
+      optimizeDeps: authOptimizeDeps,
       plugins: [vinext(), tailwindcssVite(), nitro()],
     };
   }
@@ -75,6 +95,7 @@ export default defineConfig(async ({ mode }) => {
   const { cloudflare } = await import('@cloudflare/vite-plugin');
 
   return {
+    optimizeDeps: authOptimizeDeps,
     css: { postcss: { plugins: [tailwindcss()] } },
     server: isCodexSeatbeltSandbox
       ? { watch: { useFsEvents: false, usePolling: true } }

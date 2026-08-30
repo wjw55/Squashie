@@ -24,6 +24,15 @@ const child = spawn(command, args, {
     ...process.env,
     DATABASE_POOL_MAX: '1',
     SQUASHIE_TEST_DATABASE: '1',
+    SQUASHIE_TEST_ADMIN: '1',
+    CORRECTION_RATE_LIMIT_SALT:
+      'isolated-browser-test-rate-limit-salt',
+    BETTER_AUTH_SECRET:
+      'isolated-browser-test-auth-secret-32-characters',
+    BETTER_AUTH_URL: 'http://localhost:3000',
+    GITHUB_CLIENT_ID: 'isolated-test-client-id',
+    GITHUB_CLIENT_SECRET: 'isolated-test-client-secret',
+    ADMIN_EMAILS: 'admin@example.com',
   },
   stdio: 'inherit',
 });

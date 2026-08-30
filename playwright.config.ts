@@ -16,7 +16,8 @@ export default defineConfig({
   },
   webServer: {
     command: 'npm run dev:test',
-    url: 'http://localhost:3000/methodology',
+    // Warm the heaviest dynamic route before timing individual journeys.
+    url: 'http://localhost:3000/admin/moderation',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

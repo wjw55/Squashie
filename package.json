@@ -14,7 +14,7 @@
     "start": "wrangler dev --config dist/server/wrangler.json",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "test:integration": "node --conditions=react-server --import tsx --test tests/integration/*.test.ts",
-    "test:e2e": "playwright test tests/e2e/discovery.spec.ts",
+    "test:e2e": "playwright test tests/e2e/discovery.spec.ts tests/e2e/corrections.spec.ts",
     "test:a11y": "playwright test tests/e2e/accessibility.spec.ts --project=desktop-chromium",
     "typecheck": "tsc --noEmit --incremental false",
     "check:vinext": "vinext check",
@@ -26,6 +26,8 @@
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",
+    "@better-auth/drizzle-adapter": "1.7.2",
+    "better-auth": "1.7.2",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "drizzle-orm": "0.45.2",

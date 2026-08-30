@@ -21,7 +21,6 @@ import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
-import { correctionHref } from '@/lib/config';
 import { loadCommunity } from '@/lib/server/community-loaders';
 import { cn } from '@/lib/utils';
 
@@ -63,7 +62,6 @@ export default async function CommunityPage({ params }: PageProps) {
   const community = await loadCommunity(slug);
   if (!community) notFound();
   const directions = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(community.address)}`;
-  const correction = correctionHref(community.name);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -310,18 +308,12 @@ export default async function CommunityPage({ params }: PageProps) {
             </ul>
           </div>
           <div className="md:text-right">
-            {correction ? (
-              <a
-                href={correction}
-                className={buttonVariants({ variant: 'outline' })}
-              >
-                Suggest a correction or verify
-              </a>
-            ) : (
-              <span className="inline-flex rounded-xl border border-dashed border-border px-3 py-2 text-xs text-muted-foreground">
-                Correction email activates before public launch
-              </span>
-            )}
+            <Link
+              href={`/corrections?community=${community.slug}`}
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              Suggest a correction or verify
+            </Link>
           </div>
         </section>
       </div>

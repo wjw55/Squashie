@@ -37,12 +37,44 @@ test('public pages have no serious or critical axe violations', async ({
     ['home', '/'],
     ['methodology', '/methodology'],
     ['community-detail', '/communities/safra-squash-club'],
+    ['correction-form', '/corrections?community=safra-squash-club'],
+    ['admin-sign-in', '/admin/moderation'],
   ] as const;
 
   for (const [name, path] of pages) {
     await page.goto(path);
     await expectNoBlockingViolations(page, testInfo, name);
   }
+});
+
+test('authenticated moderation dashboard passes axe checks', async ({
+  page,
+}, testInfo) => {
+  const response = await page.request.post('/api/corrections', {
+    data: {
+      communitySlug: 'safra-squash-club',
+      field: 'courtFee',
+      proposedValue: 'Accessible moderation proposal',
+      sourceUrl: 'https://example.com/accessibility-source',
+      explanation: 'Submitted to exercise the protected review interface.',
+      contactInfo: '',
+      website: '',
+    },
+    headers: {
+      Origin: 'http://localhost:3000',
+      'x-vercel-forwarded-for': '198.51.100.90',
+    },
+  });
+  expect(response.status()).toBe(201);
+  await page.context().setExtraHTTPHeaders({
+    'x-squashie-test-admin': 'admin@example.com',
+    'x-squashie-test-admin-id': 'axe-admin',
+  });
+  await page.goto('/admin/moderation');
+  await expect(
+    page.getByText('Accessible moderation proposal'),
+  ).toBeVisible();
+  await expectNoBlockingViolations(page, testInfo, 'moderation-dashboard');
 });
 
 test('filtered and empty discovery states pass axe checks', async ({
