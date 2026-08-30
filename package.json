@@ -10,7 +10,7 @@
     "dev:vercel": "vite --mode vercel --port 3000",
     "dev:test": "pglite-server --db=memory:// --max-connections=10 --run \"node --import tsx scripts/dev-test-app.ts\" --include-database-url",
     "build": "vinext build",
-    "build:vercel": "vite build --mode vercel",
+    "build:vercel": "vite build --mode vercel && node scripts/verify-vercel-runtime.mjs",
     "start": "wrangler dev --config dist/server/wrangler.json",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "test:integration": "node --conditions=react-server --import tsx --test tests/integration/*.test.ts",
@@ -69,6 +69,7 @@
     "wrangler": "4.127.1"
   },
   "overrides": {
+    "rolldown": "1.2.1",
     "undici": "7.29.0"
   },
   "type": "module"
