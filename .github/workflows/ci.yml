@@ -37,6 +37,9 @@ jobs:
       - name: Run unit tests
         run: npm test
 
+      - name: Run PostgreSQL integration tests
+        run: npm run test:integration
+
       - name: Check Vinext compatibility
         run: npm run check:vinext
 
@@ -56,7 +59,7 @@ jobs:
         run: npm run test:a11y
 
       - name: Upload Playwright diagnostics
-        if: ${{ !cancelled() }}
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v5
         with:
           name: playwright-report

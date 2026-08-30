@@ -11,7 +11,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import type { Community } from '@/lib/communities';
+import type { Community } from '@/lib/domain/community';
 import { cn } from '@/lib/utils';
 
 const verificationTone: Record<Community['verificationStatus'], string> = {
@@ -28,6 +28,14 @@ function checkedLabel(date: string) {
   }).format(new Date(`${date}T00:00:00+08:00`));
 }
 
+function latestCheckedDate(communities: Community[]) {
+  return communities.reduce(
+    (latest, community) =>
+      community.lastChecked > latest ? community.lastChecked : latest,
+    '',
+  );
+}
+
 export function CommunityResults({
   communities,
   filtered,
@@ -41,6 +49,8 @@ export function CommunityResults({
   onCompare: (slug: string) => void;
   onReset: () => void;
 }) {
+  const latestChecked = latestCheckedDate(communities);
+
   return (
     <div>
       <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
@@ -52,21 +62,32 @@ export function CommunityResults({
             A clearer place to start
           </h2>
         </div>
-        <p className="text-xs leading-5 text-muted-foreground">
-          Facts checked 29 Aug 2026 · Always confirm before paying
-        </p>
+        {latestChecked && (
+          <p className="text-xs leading-5 text-muted-foreground">
+            Facts checked {checkedLabel(latestChecked)} · Always confirm before
+            paying
+          </p>
+        )}
       </div>
 
       {filtered.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border bg-card px-5 py-14 text-center">
           <Search className="mx-auto size-8 text-muted-foreground" />
-          <h3 className="mt-4 text-lg font-semibold">No exact match yet</h3>
+          <h3 className="mt-4 text-lg font-semibold">
+            {communities.length === 0
+              ? 'No published listings yet'
+              : 'No exact match yet'}
+          </h3>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">
-            Try a nearby region, remove one filter, or browse all communities.
+            {communities.length === 0
+              ? 'The directory is connected, but there are currently no published communities.'
+              : 'Try a nearby region, remove one filter, or browse all communities.'}
           </p>
-          <Button onClick={onReset} variant="outline" className="mt-5">
-            Clear filters
-          </Button>
+          {communities.length > 0 && (
+            <Button onClick={onReset} variant="outline" className="mt-5">
+              Clear filters
+            </Button>
+          )}
         </div>
       ) : (
         <div className="grid gap-4 xl:grid-cols-2">

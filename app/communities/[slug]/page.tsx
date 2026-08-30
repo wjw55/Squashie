@@ -21,21 +21,24 @@ import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
-import { communities, getCommunity } from '@/lib/communities';
 import { correctionHref } from '@/lib/config';
+import { loadCommunity } from '@/lib/server/community-loaders';
 import { cn } from '@/lib/utils';
 
 type PageProps = { params: Promise<{ slug: string }> };
-
-export function generateStaticParams() {
-  return communities.map((community) => ({ slug: community.slug }));
-}
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const community = getCommunity(slug);
+  if (process.env.SQUASHIE_TEST_DATABASE === '1') {
+    return {
+      title: 'Community listing',
+      description:
+        'Source-backed access, cost, training, and joining information for a Singapore squash community.',
+    };
+  }
+  const community = await loadCommunity(slug);
   if (!community) return { title: 'Community not found' };
   const description = `${community.suitableFor} Access: ${community.accessSummary}. Indicative cost: ${community.indicativeCost}.`;
   return {
@@ -57,7 +60,7 @@ export async function generateMetadata({
 
 export default async function CommunityPage({ params }: PageProps) {
   const { slug } = await params;
-  const community = getCommunity(slug);
+  const community = await loadCommunity(slug);
   if (!community) notFound();
   const directions = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(community.address)}`;
   const correction = correctionHref(community.name);

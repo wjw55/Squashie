@@ -10,7 +10,7 @@ import type {
   CommunityCategory,
   PlayerLevel,
   Region,
-} from '@/lib/communities';
+} from '@/lib/domain/community';
 import type { DiscoveryFilters as DiscoveryFilterValues } from '@/lib/discovery';
 
 const regions: Region[] = [

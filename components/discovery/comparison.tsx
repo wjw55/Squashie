@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import type { Community } from '@/lib/communities';
+import type { Community } from '@/lib/domain/community';
 import { cn } from '@/lib/utils';
 
 const comparisonRows: {

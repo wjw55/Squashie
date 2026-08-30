@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { communities, notListed } from '../lib/communities.ts';
+import { communities, notListed } from '../db/seed-data.ts';
 import {
   emptyDiscoveryFilters,
   filterCommunities,

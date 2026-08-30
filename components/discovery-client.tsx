@@ -11,7 +11,7 @@ import { DiscoveryFilters } from '@/components/discovery/discovery-filters';
 import { DiscoveryHero } from '@/components/discovery/discovery-hero';
 import { EditorialCallout } from '@/components/discovery/editorial-callout';
 import { useDiscoveryState } from '@/components/discovery/use-discovery-state';
-import type { Community } from '@/lib/communities';
+import type { Community } from '@/lib/domain/community';
 
 export function DiscoveryClient({ communities }: { communities: Community[] }) {
   const [compareOpen, setCompareOpen] = useState(false);

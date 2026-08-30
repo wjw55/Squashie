@@ -1,4 +1,4 @@
-import type { Community, PlayerLevel } from '@/lib/communities';
+import type { Community, PlayerLevel } from '@/lib/domain/community';
 
 export interface DiscoveryFilters {
   query: string;

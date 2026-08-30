@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useReducer, useState } from 'react';
 
-import type { Community } from '@/lib/communities';
+import type { Community } from '@/lib/domain/community';
 import {
   emptyDiscoveryFilters,
   filterCommunities,

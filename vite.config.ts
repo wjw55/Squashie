@@ -12,9 +12,24 @@ const { d1, r2 } = hostingConfig;
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === 'seatbelt';
 
+const localVars: Record<string, string> =
+  process.env.SQUASHIE_TEST_DATABASE === '1'
+    ? {
+        DATABASE_URL:
+          'postgresql://postgres:postgres@127.0.0.1:5432/postgres',
+        DATABASE_POOL_MAX: '1',
+        SQUASHIE_TEST_DATABASE: '1',
+      }
+    : {};
+
 const localBindingConfig = {
   main: 'vinext/server/fetch-handler',
-  compatibility_flags: ['nodejs_compat'],
+  compatibility_date: '2026-08-30',
+  compatibility_flags: [
+    'nodejs_compat',
+    'nodejs_compat_populate_process_env',
+  ],
+  vars: localVars,
   d1_databases: d1
     ? [
         {
